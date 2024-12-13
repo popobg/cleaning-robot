@@ -30,7 +30,7 @@ class Robot {
         const dernierePosition = this.historiquePosition[this.historiquePosition.length - 2];
 
         // Si le robot n'est pas en bout de ligne
-        if (this.position.getX() < (oGrille.largeur - 1) && this.position.getX() > 0) {
+        if (this.position.getX() < (oGrille.getWidth() - 1) && this.position.getX() > 0) {
             // Si le robot vient de la gauche
             if (dernierePosition.getX() < this.position.getX()) {
                 // le robot se déplace vers la droite
@@ -45,7 +45,7 @@ class Robot {
         }
         // Le robot est en bout de ligne
         else {
-            if (this.position.getY() < (oGrille.hauteur - 1)) {
+            if (this.position.getY() < (oGrille.getHeight() - 1)) {
                 // Le robot se déplace vers le bas
                 this.setPosition(this.position.getX(), this.position.getY() + 1);
                 this.displayDeplacement("le bas");
