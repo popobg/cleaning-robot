@@ -40,8 +40,7 @@ class Robot {
     }
 
     // Appelée par la fonction logique métier
-    // Déplace le robot de gauche à droite et bas en haut ;
-    // Enregistre la nouvelle position dans l'historique des positions
+    // Déplace le robot de gauche à droite et bas en haut
     SeDeplacer(oGrille) {
         const largeurMax = oGrille.GetLargeur() - 1;
         const hauteurMax = oGrille.GetHauteur() - 1;
@@ -83,7 +82,6 @@ class Robot {
     }
 
     AjouterPositionHistorique() {
-        // deep copy avec l'opérateur spread (no ref copy)
         const currentPos = new Coordonnee(this.position.GetX(), this.position.GetY());
         this.historiquePosition.push(currentPos);
     }
@@ -92,7 +90,7 @@ class Robot {
     Nettoyer(oGrille) {
         // envoie la position à nettoyer à la grille
         oGrille.UpdateGrille(this.position.GetX(), this.position.GetY());
-        console.log(`La position actuelle [${this.position.GetX()}, ${this.position.GetY()}] est propre.`);
+        console.log(`La position actuelle [${this.position.GetX()}, ${this.position.GetY()}] a été nettoyée.`);
     }
 }
 

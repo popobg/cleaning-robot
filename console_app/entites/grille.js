@@ -30,6 +30,12 @@ class Grille {
         }
     }
 
+    isDirty(x, y) {
+        if (this.grille?.[y]?.[x] === " ") {
+            return true;
+        }
+    }
+
     GetLargeur() {
         return this.largeur;
     }
@@ -46,7 +52,6 @@ class Grille {
         this.hauteur = hauteur;
     }
 }
-// Optimisation : avoir juste un tableau avec les coordonnées des cases sales
-// donc plus de grille
+// Optimisation : avoir juste un tableau avec les coordonnées des cases sales ==> plus de grille
 
 module.exports = Grille;
