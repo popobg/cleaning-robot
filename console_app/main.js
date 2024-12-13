@@ -8,7 +8,7 @@ const AfficherGrille = require("./utilities/affichergrille.js");
     const affichage = new AfficherGrille();
 
     let pos = robot.GetPosition();
-    affichage.AfficherGrille(oGrille.grille, pos.GetX(), pos.GetY());
+    affichage.Afficher(oGrille.grille, pos.GetX(), pos.GetY());
 
     while (!(pos.GetX() === (oGrille.largeur - 1) && pos.GetY() === (oGrille.hauteur - 1))) {
         robot.SeDeplacer(oGrille);
