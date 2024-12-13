@@ -14,10 +14,6 @@ class Robot {
         this.position.setY(y);
     }
 
-    getGrille() {
-        return this.grille;
-    }
-
     displayPosition() {
         console.log(`Position du robot : x = ${this.position.getX()}, y = ${this.position.getY()}`);
     }
@@ -27,42 +23,49 @@ class Robot {
         this.displayPosition();
     }
 
-    move(grille) {
-        // Déplace le robot de gauche à droite et bas en haut ;
-        // Enregistre la nouvelle position dans l'historique des positions
-        const dernierePosition = this.historiquePosition[this.historiquePosition.length - 1];
+    // Appelée par la fonction logique métier
+    // Déplace le robot de gauche à droite et bas en haut ;
+    // Enregistre la nouvelle position dans l'historique des positions
+    move(oGrille) {
+        const dernierePosition = this.historiquePosition[this.historiquePosition.length - 2];
 
         // Si le robot n'est pas en bout de ligne
-        if (this.position.getX() < (grille.largeur - 1) && this.position.getX() > 0) {
+        if (this.position.getX() < (oGrille.largeur - 1) && this.position.getX() > 0) {
             // Si le robot vient de la gauche
             if (dernierePosition.getX() < this.position.getX()) {
                 // le robot se déplace vers la droite
-                this.position.setX(this.position.getX() + 1);
+                this.setPosition(this.position.getX() + 1, this.position.getY());
+                this.displayDeplacement("la droite");
             }
             else {
                 // le robot se déplace vers la gauche
-                this.position.setX(this.position.getX() - 1);
+                this.setPosition(this.position.getX() - 1, this.position.getY());
+                this.displayDeplacement("la gauche");
             }
         }
         // Le robot est en bout de ligne
         else {
-            if (this.position.getY() < (grille.hauteur - 1)) {
+            if (this.position.getY() < (oGrille.hauteur - 1)) {
                 // Le robot se déplace vers le bas
-                this.position.setY(this.position.getY() + 1);
+                this.setPosition(this.position.getX(), this.position.getY() + 1);
+                this.displayDeplacement("le bas");
             }
         }
 
-        this.ajoutPosition();
+        this.addPositionToHistoric();
+    }
+
+    addPositionToHistoric() {
+        // deep copy avec l'opérateur spread (no ref copy)
+        const currentPos = Object.assign({}, this.position);
+        this.positionHistoric.push(currentPos);
     }
 
     // Appelée par la fonction logique métier
-    clean(grille) {
-        // deep copy using the spread operator (no ref copy)
-        const currentPos = Object.assign({}, this.position);
-        this.positionHistoric.push(currentPos);
-
+    clean(oGrille) {
+        // envoie la position à nettoyer à la grille
+        oGrille.updateGrid(this.position);
         console.log(`La position actuelle (${this.position.getX()}, ${this.position.getY()}) est propre.`);
-        return grille;
     }
 
     displayPositionHistoric() {

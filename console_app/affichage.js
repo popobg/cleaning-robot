@@ -1,5 +1,5 @@
-grille.createGrid();
-let grid = gille.getGrid();
+const oGrille = new Grille();
+oGrille.createGrid();
 const robot = new Robot(grid);
 // [["X", "X", "X", "X", " ", " ", "X"], [" ", "X", "X", ...], ...]
 let coordonnees_robot = Robot.getPosition();
@@ -19,7 +19,7 @@ while(coordonnees_robot.getX() === (grid.largeur -1) && coordonnees_robot.getY()
             if () {// le cas où c'est les coordonnées du robot
                 // display R
                 if (grid[y][x] === " ") {
-                    // grid = robot.clean(grid);
+                    // grid = robot.clean(oGrille);
                 }
             }
             else {
