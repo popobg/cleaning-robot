@@ -3,7 +3,7 @@ class Grille {
         this.largeur = largeur; 
         this.hauteur = hauteur; 
         this.pourcentagepoussiere = pourcentagepoussiere;
-        this.CreateGrid=this.CreateGrid;
+        this.CreateGrid = this.CreateGrid;
     }
     CreateGrid()  { 
         let grille = [];
