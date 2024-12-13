@@ -24,7 +24,7 @@ class Grille {
         return grille;
     }
 
-    UpdateGrille(x, y){
+    UpdateGrille(x, y) {
         if (this.grille?.[y]?.[x] === " ") {
             this.grille[y][x] = "X";
         }
@@ -46,7 +46,6 @@ class Grille {
         this.hauteur = hauteur;
     }
 }
-
 // Optimisation : avoir juste un tableau avec les coordonnées des cases sales
 // donc plus de grille
 
