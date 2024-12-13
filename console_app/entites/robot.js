@@ -90,7 +90,7 @@ class Robot {
     Nettoyer(oGrille) {
         // envoie la position à nettoyer à la grille
         oGrille.UpdateGrille(this.position.GetX(), this.position.GetY());
-        console.log(`La position actuelle [${this.position.GetX()}, ${this.position.GetY()}] est propre.`);
+        console.log(`La position actuelle [${this.position.GetX()}, ${this.position.GetY()}] a été nettoyée.`);
     }
 }
 

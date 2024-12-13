@@ -30,6 +30,12 @@ class Grille {
         }
     }
 
+    isDirty(x, y) {
+        if (this.grille?.[y]?.[x] === " ") {
+            return true;
+        }
+    }
+
     GetLargeur() {
         return this.largeur;
     }
