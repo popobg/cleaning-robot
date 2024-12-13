@@ -1,34 +1,51 @@
 class Grille {
-    constructor(largeur = 5, hauteur = 5, poussiere = 25) {
-        this.largeur = largeur; 
-        this.hauteur = hauteur; 
-        this.pourcentagepoussiere = this.pourcentagepoussiere;
-        this.CreateGrid=this.CreateGrid;
+    constructor(largeur = 5, hauteur = 5, pourcentagepoussiere = 25) {
+        this.largeur = largeur;
+        this.hauteur = hauteur;
+        this.pourcentagepoussiere = pourcentagepoussiere;
+        this.grille=this.CreateGrille();
     }
-    CreateGrid()  { 
+
+    CreateGrille() {
         let grille = [];
-        for (let y = 0; y < this.hauteur; y++)  { 
+        for (let y = 0; y < this.hauteur; y++) {
             const ligne = [];
-            for (let x = 0; x < this.largeur; x++)  
+
+            for (let x = 0; x < this.largeur; x++)
             {
+                // " " = case sale, "X" = case propre
+                // la case a un pourcentage de chance donné d'être sale
                 ligne.push(Math.random() < this.pourcentagepoussiere / 100 ? " " : "X");
              }
-             grille.push(ligne);
+            grille.push(ligne);
         }
         return grille;
     }
-    getheight() {
+
+    UpdateGrille(x, y){
+        if (this.grille?.[y]?.[x] === " ") {
+            this.grille[y][x] = "X";
+        }
+    }
+
+    GetLargeur() {
         return this.largeur;
     }
-    getwidth() {
+
+    GetHauteur() {
         return this.hauteur;
     }
 
-    setheight(largeur) {
-        this.x = largeur;
+    SetLargeur(largeur) {
+        this.largeur = largeur;
     }
 
-    setwidth(hauteur) {
+    SetHauteur(hauteur) {
         this.hauteur = hauteur;
     }
 }
+
+// Optimisation : avoir juste un tableau avec les coordonnées des cases sales
+// donc plus de grille
+
+module.exports = Grille;
