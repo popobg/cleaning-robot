@@ -3,7 +3,7 @@ class Grille {
         this.largeur = largeur;
         this.hauteur = hauteur;
         this.pourcentagepoussiere = pourcentagepoussiere;
-        this.grille=this.CreateGrille();
+        this.grille = this.CreateGrille();
     }
 
     CreateGrille() {
@@ -17,8 +17,10 @@ class Grille {
                 // la case a un pourcentage de chance donné d'être sale
                 ligne.push(Math.random() < this.pourcentagepoussiere / 100 ? " " : "X");
              }
+
             grille.push(ligne);
         }
+
         return grille;
     }
 
