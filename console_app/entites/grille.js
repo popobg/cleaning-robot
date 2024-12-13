@@ -6,20 +6,22 @@ class Grille {
         this.CreateGrid = this.CreateGrid;
     }
     CreateGrid()  { 
-        let grille = [];
+        let oGrille = [];
         for (let y = 0; y < this.hauteur; y++)  { 
             const ligne = [];
             for (let x = 0; x < this.largeur; x++)  
             {
                 ligne.push(Math.random() < this.pourcentagepoussiere / 100 ? " " : "X");
              }
-             grille.push(ligne);
+             oGrille.push(ligne);
         }
-        return grille;
+        return oGrille;
     }
     UpdateGrid(x, y){ 
+
         if (this.grille?.[y]?.[x] === " ") { 
             this.grille[y][x] = "X";
+
         }
     }
     getlargeur() {
@@ -37,4 +39,6 @@ class Grille {
         this.hauteur = hauteur;
     }
 }
-const grille = new Grille(largeur, hauteur, poussiere);
+
+const grille = new Grille(largeur, hauteur, pourcentagepoussiere);
+
