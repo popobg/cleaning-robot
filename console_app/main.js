@@ -29,7 +29,7 @@ const AfficherGrille = require("./utilities/afficherGrille.js");
         console.clear();
 
         // robot.SeDeplacer(oGrille);
-        robot.SeDeplacerIntelligemment(oGrille.GetCasesSales());
+        robot.SeDeplacer(oGrille.GetCasesSales());
         pos = robot.GetPosition();
 
         if (oGrille.isDirty(pos.GetX(), pos.GetY())) {

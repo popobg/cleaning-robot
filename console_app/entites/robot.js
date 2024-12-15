@@ -40,7 +40,7 @@ class Robot {
         console.log(`Le robot se déplace vers ${direction} de la case [${anciennePosition.GetX()}, ${anciennePosition.GetY()}] vers la case [${nouvellePosition.GetX()}, ${nouvellePosition.GetY()}].`);
     }
 
-    SeDeplacerIntelligemment(casesSales) {
+    SeDeplacer(casesSales) {
         if (this.objectif.x === this.position.GetX()
             && this.objectif.y === this.position.GetY()) {
                 this.objectif.x = null;
