@@ -1,39 +1,35 @@
 class Grille {
-    constructor(largeur = 5, hauteur = 5, pourcentagepoussiere = 25) {
+    constructor(largeur = 5, hauteur = 5, pourcentagePoussiere = 25) {
         this.largeur = largeur;
         this.hauteur = hauteur;
-        this.pourcentagepoussiere = pourcentagepoussiere;
-        this.grille = this.CreateGrille();
+        this.pourcentagePoussiere = pourcentagePoussiere;
+        this.casesSales = this.GenerateCasesSales();
     }
 
-    CreateGrille() {
-        let grille = [];
-        for (let y = 0; y < this.hauteur; y++) {
-            const ligne = [];
+    GenerateCasesSales() {
+        const nbCasesSales = Math.floor((this.largeur * this.hauteur) * this.pourcentagePoussiere / 100);
 
-            for (let x = 0; x < this.largeur; x++)
-            {
-                // " " = case sale, "X" = case propre
-                // la case a un pourcentage de chance donné d'être sale
-                ligne.push(Math.random() < this.pourcentagepoussiere / 100 ? " " : "X");
-             }
+        const casesSales = [];
+        while (casesSales.length < nbCasesSales) {
+            const x = Math.floor(Math.random() * this.largeur);
+            const y = Math.floor(Math.random() * this.hauteur);
+            const caseSale = new Coordonnee(x, y);
 
-            grille.push(ligne);
+            if (!casesSales.some(c => c.GetX() === x && c.GetY() === y)) {
+                casesSales.push(caseSale);
+            }
         }
 
-        return grille;
+        return casesSales;
     }
 
     UpdateGrille(x, y) {
-        if (this.grille?.[y]?.[x] === " ") {
-            this.grille[y][x] = "X";
-        }
+        this.casesSales = this.casesSales.filter(c => !(c.GetX() === x && c.GetY() === y));
     }
 
     isDirty(x, y) {
-        if (this.grille?.[y]?.[x] === " ") {
-            return true;
-        }
+        const check = this.casesSales.some(c => c.GetX() === x && c.GetY() === y);
+        return check;
     }
 
     GetLargeur() {
@@ -44,14 +40,10 @@ class Grille {
         return this.hauteur;
     }
 
-    SetLargeur(largeur) {
-        this.largeur = largeur;
-    }
-
-    SetHauteur(hauteur) {
-        this.hauteur = hauteur;
+    GetCasesSales() {
+        return this.casesSales;
     }
 }
-// Optimisation : avoir juste un tableau avec les coordonnées des cases sales ==> plus de grille
 
+const Coordonnee = require("./coordonnee.js");
 module.exports = Grille;

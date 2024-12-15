@@ -2,20 +2,36 @@ class AfficherGrille {
     constructor() {
     }
 
-    Afficher(grille, rx,ry)
+    Afficher(oGrille, rx, ry)
     {
         console.log("=========================");
         console.log();
 
-        grille.forEach((ligne, y) => {
-        const ligneAffichee = ligne.map((caseGrille, x) => x === rx && y === ry ? "R" : caseGrille);
+        for (let y = 0; y < oGrille.hauteur; y++) {
+            let ligne = "|";
 
-        console.log("| " + ligneAffichee.join(" | ") + " |");
-        });
+            for (let x = 0; x < oGrille.largeur; x++) {
+                // position du robot
+                if (x === rx && y === ry) {
+                    ligne += " R |";
+                    continue;
+                }
+
+                if (oGrille.isDirty(x, y)) {
+                    ligne += "   |";
+                    continue;
+                }
+
+                ligne += " X |"
+            }
+
+            console.log(ligne);
+        }
 
         console.log();
         console.log("=========================");
     }
 }
 
+const Coordonnee = require("../entites/coordonnee.js");
 module.exports = AfficherGrille;
