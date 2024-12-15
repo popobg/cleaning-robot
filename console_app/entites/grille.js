@@ -20,9 +20,10 @@ class Grille {
             }
         }
 
-        return this.sortCases(casesSales);
+        return casesSales;
     }
 
+    // Fait gagner du temps à la méthode isDirty
     sortCases(cases) {
         cases.sort((a, b) => {
             if (a.y === b.y) {
@@ -41,8 +42,7 @@ class Grille {
     }
 
     isDirty(x, y) {
-        const check = this.casesSales.some(c => c.GetX() === x && c.GetY() === y);
-        return check;
+        return this.casesSales.some(c => c.GetX() === x && c.GetY() === y);
     }
 
     GetLargeur() {
