@@ -20,7 +20,20 @@ class Grille {
             }
         }
 
-        return casesSales;
+        return this.sortCases(casesSales);
+    }
+
+    sortCases(cases) {
+        cases.sort((a, b) => {
+            if (a.y === b.y) {
+                // tri par ordre croissant selon X
+                return a.x - b.x;
+            }
+            // tri par ordre croissant selon Y
+            return a.y - b.y;
+        });
+
+        return cases;
     }
 
     UpdateGrille(x, y) {

@@ -81,6 +81,10 @@ class Robot {
         this.AfficherDeplacement();
     }
 
+    // SeDeplacerIntelligemment(oGrille) {
+
+    // }
+
     AjouterPositionHistorique() {
         const currentPos = new Coordonnee(this.position.GetX(), this.position.GetY());
         this.historiquePosition.push(currentPos);
