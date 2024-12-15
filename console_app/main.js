@@ -1,6 +1,6 @@
 const Grille = require("./entites/grille.js");
 const Robot = require("./entites/robot.js");
-const AfficherGrille = require("./utilities/affichergrille.js");
+const AfficherGrille = require("./utilities/afficherGrille.js");
 
 (function () {
     const oGrille = new Grille();
@@ -10,16 +10,17 @@ const AfficherGrille = require("./utilities/affichergrille.js");
     let pos = robot.GetPosition();
 
     console.log("Le robot est à la position [0, 0].");
-    affichage.Afficher(oGrille.grille, pos.GetX(), pos.GetY());
-
     // Nettoie la position initiale si nécessaire
     if (oGrille.isDirty(0, 0)) {
         robot.Nettoyer(oGrille);
     }
 
+    affichage.Afficher(oGrille, pos.GetX(), pos.GetY());
+
     // Permet d'effectuer une action par seconde
     const pause = setInterval(() => {
-        if (pos.GetX() === (oGrille.largeur - 1) && pos.GetY() === (oGrille.hauteur - 1)) {
+        // Condition pour mettre fin à setInterval
+        if (oGrille.GetCasesSales().length === 0) {
             clearInterval(pause);
             console.log("Nettoyage terminé !");
             return;
@@ -28,13 +29,12 @@ const AfficherGrille = require("./utilities/affichergrille.js");
         console.clear();
 
         robot.SeDeplacer(oGrille);
-
         pos = robot.GetPosition();
 
-        if (oGrille.isDirty(pos.GetX(),pos.GetY())) {
+        if (oGrille.isDirty(pos.GetX(), pos.GetY())) {
             robot.Nettoyer(oGrille);
         }
 
-        affichage.Afficher(oGrille.grille, pos.GetX(), pos.GetY());
+        affichage.Afficher(oGrille, pos.GetX(), pos.GetY());
     }, 1000);
 })();
