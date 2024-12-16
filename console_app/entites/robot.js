@@ -4,7 +4,6 @@ class Robot {
         // tableau en deux dimensions représentant la grille à nettoyer
         this.historiquePosition = [];
         this.AjouterPositionHistorique(this.position);
-        this.avancer = true;
         this.objectif = { x : null, y : null };
     }
 
