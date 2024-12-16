@@ -1,5 +1,5 @@
 class Robot {
-    constructor(tauxEnergie = 20, base = new Coordonnee(0, 0)) {
+    constructor(tauxEnergie = 20, base = new Coordonnee(0, 0), tauxCharge = 80) {
         // position du départ du robot : sa base de recharge
         this.position = new Coordonnee(base.GetX(), base.GetY());
         this.historiquePosition = [];
@@ -8,6 +8,7 @@ class Robot {
         this.objectif = { x : 0, y : 0 };
         this.batterie = tauxEnergie;
         this.base = base;
+        this.tauxCharge = tauxCharge;
     }
 
     GetPosition() {
@@ -50,7 +51,8 @@ class Robot {
         // Recharge du robot
         if ((this.position.GetX() === this.base.GetX() && this.position.GetY() === this.base.GetY())
             && this.historiquePosition.length > 1) {
-            this.batterie = 100;
+            this.batterie = this.tauxCharge;
+            console.log(`Batterie chargée à ${this.tauxCharge}% !`);
         }
 
         // Calculer la distance la plus courte vers un point sale depuis la position actuelle du robot :
@@ -71,6 +73,7 @@ class Robot {
 
             // Le robot aura-t-il assez de batterie pour aller à l'objectif puis revenir à  sa base ?
             if (this.batterie < ((this.objectif.x + this.objectif.y) + this.CalculerDistance(this.base.GetX(), this.base.GetY(), this.objectif.x, this.objectif.y))) {
+                console.log("Le robot a besoin d'être rechargé. Il se dirige vers sa base.");
                 this.objectif.x = this.base.GetX() - this.position.GetX();
                 this.objectif.y = this.base.GetY() - this.position.GetY();
             }

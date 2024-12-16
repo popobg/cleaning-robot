@@ -1,5 +1,5 @@
-const Grille = require("./entites/grille.js");
-const Robot = require("./entites/robot.js");
+const Grille = require("./entities/grille.js");
+const Robot = require("./entities/robot.js");
 const AfficherGrille = require("./utilities/afficherGrille.js");
 
 (function () {
