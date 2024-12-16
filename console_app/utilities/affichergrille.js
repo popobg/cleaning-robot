@@ -33,5 +33,4 @@ class AfficherGrille {
     }
 }
 
-const Coordonnee = require("../entites/coordonnee.js");
 module.exports = AfficherGrille;

@@ -4,7 +4,7 @@ const AfficherGrille = require("./utilities/afficherGrille.js");
 
 (function () {
     const oGrille = new Grille();
-    const robot = new Robot();
+    const robot = new Robot(5);
     const affichage = new AfficherGrille();
 
     let pos = robot.GetPosition();

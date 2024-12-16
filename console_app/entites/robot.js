@@ -1,11 +1,13 @@
 class Robot {
-    constructor() {
-        this.position = new Coordonnee(0, 0);
-        // tableau en deux dimensions représentant la grille à nettoyer
+    constructor(tauxEnergie = 20, base = new Coordonnee(0, 0)) {
+        // position du départ du robot : sa base de recharge
+        this.position = new Coordonnee(base.GetX(), base.GetY());
         this.historiquePosition = [];
         this.AjouterPositionHistorique(this.position);
         this.avancer = true;
-        this.objectif = { x : null, y : null };
+        this.objectif = { x : 0, y : 0 };
+        this.batterie = tauxEnergie;
+        this.base = base;
     }
 
     GetPosition() {
@@ -40,19 +42,23 @@ class Robot {
         console.log(`Le robot se déplace vers ${direction} de la case [${anciennePosition.GetX()}, ${anciennePosition.GetY()}] vers la case [${nouvellePosition.GetX()}, ${nouvellePosition.GetY()}].`);
     }
 
+    CalculerDistance(x, y, posX, posY) {
+        return (Math.abs(posY - y) + Math.abs(posX - x));
+    }
+
     SeDeplacer(casesSales) {
-        if (this.objectif.x === this.position.GetX()
-            && this.objectif.y === this.position.GetY()) {
-                this.objectif.x = null;
-                this.objectif.y == null;
+        // Recharge du robot
+        if ((this.position.GetX() === this.base.GetX() && this.position.GetY() === this.base.GetY())
+            && this.historiquePosition.length > 1) {
+            this.batterie = 100;
         }
 
         // Calculer la distance la plus courte vers un point sale depuis la position actuelle du robot :
-        if (this.objectif.x === null || (this.objectif.x === 0 || this.objectif.y === 0)) {
+        if (this.objectif.x === 0 && this.objectif.y === 0) {
             let nbCasesPlusCourtTrajet;
 
             casesSales.forEach(c => {
-                const chemin = (Math.abs(this.position.GetY() - c.GetY())) + (Math.abs(this.position.GetX() - c.GetX()));
+                const chemin = this.CalculerDistance(c.GetX(), c.GetY(), this.position.GetX(), this.position.GetY());
 
                 if (nbCasesPlusCourtTrajet === undefined || nbCasesPlusCourtTrajet > chemin) {
                     nbCasesPlusCourtTrajet = chemin;
@@ -62,6 +68,12 @@ class Robot {
                     this.objectif.y = c.GetY() - this.position.GetY();
                 }
             });
+
+            // Le robot aura-t-il assez de batterie pour aller à l'objectif puis revenir à  sa base ?
+            if (this.batterie < ((this.objectif.x + this.objectif.y) + this.CalculerDistance(this.base.GetX(), this.base.GetY(), this.objectif.x, this.objectif.y))) {
+                this.objectif.x = this.base.GetX() - this.position.GetX();
+                this.objectif.y = this.base.GetY() - this.position.GetY();
+            }
         }
 
         // On commence par se déplacer sur l'axe X.
@@ -87,6 +99,8 @@ class Robot {
             this.objectif.y--;
         }
 
+        // Perte de 1% à chaque déplacement
+        this.batterie--;
         this.AjouterPositionHistorique();
         this.AfficherDeplacement();
     }
@@ -101,6 +115,8 @@ class Robot {
         // envoie la position à nettoyer à la grille
         oGrille.UpdateGrille(this.position.GetX(), this.position.GetY());
         console.log(`La position actuelle [${this.position.GetX()}, ${this.position.GetY()}] a été nettoyée.`);
+        // Perte de 1% d'énergie au nettoyage
+        this.batterie--;
     }
 }
 
