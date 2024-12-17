@@ -4,7 +4,7 @@ const AfficherGrille = require("./utilities/afficherGrille.js");
 
 (function () {
     const oGrille = new Grille();
-    const robot = new Robot(5);
+    const robot = new Robot(5, 15);
     const affichage = new AfficherGrille();
 
     let pos = robot.GetPosition();
@@ -20,9 +20,14 @@ const AfficherGrille = require("./utilities/afficherGrille.js");
     // Permet d'effectuer une action par seconde
     const pause = setInterval(() => {
         // Condition pour mettre fin à setInterval
-        if (oGrille.GetCasesSales().length === 0) {
+        if (oGrille.GetCasesSales().length === 0 || robot.impossible) {
             clearInterval(pause);
-            console.log("Nettoyage terminé !");
+            if (!robot.impossible) {
+                console.log("Nettoyage terminé !");
+            }
+            else {
+                console.log("Fin de nettoyage impossible.");
+            }
             return;
         }
 
