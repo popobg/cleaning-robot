@@ -1,19 +1,23 @@
 class Robot {
-    constructor(tauxEnergie = 20, tauxCharge = 100, base = new Coordonnee(0, 0)) {
+    constructor(batterieInitiale = 20, tauxCharge = 100, base = new Coordonnee(0, 0)) {
         // position du départ du robot : sa base de recharge
         this.position = new Coordonnee(base.GetX(), base.GetY());
         this.historiquePosition = [];
         this.AjouterPositionHistorique(this.position);
         this.objectif = { x : 0, y : 0 };
-        this.batterie = tauxEnergie;
+        this.batterie = batterieInitiale;
         this.base = base;
         this.tauxCharge = tauxCharge;
-        this.impossible = false;
         this.premierTour = true;
+        this.impossible = false;
     }
 
     GetPosition() {
         return this.position;
+    }
+
+    GetBase() {
+        return this.base;
     }
 
     SetPosition(x, y) {
@@ -49,11 +53,19 @@ class Robot {
     }
 
     SeDeplacer(casesSales) {
+        if (casesSales.length === 0) {
+            this.objectif.x = this.base.GetX() - this.position.GetX();
+            this.objectif.y = this.base.GetY() - this.position.GetY();
+            console.log("Retour à la base.");
+        }
+
         // Recharge du robot
-        if ((this.position.GetX() === this.base.GetX() && this.position.GetY() === this.base.GetY())
-            && !this.premierTour ) {
+        if ((this.position.GetX() === this.base.GetX() && this.position.GetY() === this.base.GetY() && this.batterie < this.tauxCharge)
+            && !this.premierTour) {
             this.batterie = this.tauxCharge;
+            console.log("Le robot se charge... Pas de déplacement à ce tour.");
             console.log(`Batterie chargée à ${this.tauxCharge}% !`);
+            return;
         }
 
         // Calculer la distance la plus courte vers un point sale depuis la position actuelle du robot :
@@ -72,30 +84,37 @@ class Robot {
                 }
             });
 
-            // Le robot aura-t-il assez de batterie pour aller à l'objectif puis revenir à  sa base ?
+            // Le robot aura-t-il assez de batterie pour aller à l'objectif puis revenir à sa base ?
             const trajet = Math.abs(this.objectif.x + this.objectif.y);
             const retour = this.CalculerDistance(this.base.GetX(), this.base.GetY(), this.position.GetX() + this.objectif.x, this.position.GetY() + this.objectif.y);
-            const somme = trajet + retour;
-
-            if (this.CalculerDistance(this.base.GetX(), this.base.GetY(), this.objectif.x, this.objectif.y) * 2 >= this.tauxCharge) {
-                console.log("Tâches restantes impossibles à atteindre avec le taux de charge donné.");
-                this.impossible = true;
-                return;
-            }
+            // ajout du point de nettoyage
+            const somme = trajet + retour + 1;
 
             // -1 pour la perte de batterie due au nettoyage
-            if ((this.batterie - 1) - somme <= 0) {
+            if ((this.batterie - 1) <= somme) {
                 console.log("Le robot a besoin d'être rechargé.");
+
+                // Recharge dès le premier tour
+                if (this.premierTour) {
+                    this.batterie = this.tauxCharge;
+                    console.log("Le robot se charge... Pas de déplacement à ce tour.");
+                    console.log(`Batterie chargée à ${this.tauxCharge}% !`);
+                    this.premierTour = false;
+                    return;
+                }
+
                 this.objectif.x = this.base.GetX() - this.position.GetX();
                 this.objectif.y = this.base.GetY() - this.position.GetY();
             }
-        }
 
-        // Recharge dès le premier tour --> pas de déplacement
-        if (this.objectif.x === this.base.GetX() && this.objectif.y === this.base.GetY() && this.premierTour) {
-            console.log("Pas de déplacement à ce tour.");
-            this.premierTour = false;
-            return;
+            // Si la case la plus proche est hors de portée d'un aller-retour au point de charge + nettoyage
+            // avec le niveau de charge dispensée --> fin de nettoyage impossible
+            if ((retour + 1) * 2 >= this.tauxCharge) {
+                console.log("Tâches restantes impossibles à atteindre avec le taux de charge donné.");
+                this.objectif.x = this.base.GetX() - this.position.GetX();
+                this.objectif.y = this.base.GetY() - this.position.GetY();
+                this.impossible = true;
+            }
         }
 
         // On commence par se déplacer sur l'axe X.
@@ -124,7 +143,7 @@ class Robot {
         this.AjouterPositionHistorique();
         this.AfficherDeplacement();
 
-        // Perte de 1% à chaque déplacement
+        // Perte de 1% d'énergie à chaque déplacement
         this.batterie--;
         console.log(`Batterie du robot : ${this.batterie}%.`);
 
@@ -141,14 +160,11 @@ class Robot {
         // envoie la position à nettoyer à la grille
         oGrille.UpdateGrille(this.position.GetX(), this.position.GetY());
 
-        // Si plus de tâches --> retour à la base
-        if (oGrille.casesSales.length === 0) {
-            oGrille.casesSales.push(new Coordonnee(0, 0));
-        }
-
         console.log(`La position actuelle [${this.position.GetX()}, ${this.position.GetY()}] a été nettoyée.`);
         // Perte de 1% d'énergie au nettoyage
         this.batterie--;
+        console.log(`Batterie du robot : ${this.batterie}%.`);
+
     }
 }
 
