@@ -4,7 +4,7 @@ class Robot {
         this.position = new Coordonnee(base.GetX(), base.GetY());
         this.historiquePosition = [];
         this.AjouterPositionHistorique(this.position);
-        this.objectif = { x : 0, y : 0 };
+        this.deplacement = { x : 0, y : 0 };
         this.batterie = batterieInitiale;
         this.base = base;
         this.tauxCharge = tauxCharge;
@@ -54,8 +54,11 @@ class Robot {
 
     SeDeplacer(casesSales) {
         if (casesSales.length === 0) {
-            this.objectif.x = this.base.GetX() - this.position.GetX();
-            this.objectif.y = this.base.GetY() - this.position.GetY();
+            this.deplacement.x = this.base.GetX() - this.position.GetX();
+            this.deplacement.y = this.base.GetY() - this.position.GetY();
+        }
+
+        if (this.position.GetX() + this.deplacement.x === this.base.GetX() && this.position.GetY() + this.deplacement.y === this.base.GetY()) {
             console.log("Retour à la base.");
         }
 
@@ -69,7 +72,7 @@ class Robot {
         }
 
         // Calculer la distance la plus courte vers un point sale depuis la position actuelle du robot :
-        if (this.objectif.x === 0 && this.objectif.y === 0) {
+        if (this.deplacement.x === 0 && this.deplacement.y === 0) {
             let nbCasesPlusCourtTrajet;
 
             casesSales.forEach(c => {
@@ -78,15 +81,15 @@ class Robot {
                 if (nbCasesPlusCourtTrajet === undefined || nbCasesPlusCourtTrajet > chemin) {
                     nbCasesPlusCourtTrajet = chemin;
                     // nb de déplacement sur l'axe horizontal : négatif si la case sale est à gauche du robot
-                    this.objectif.x = c.GetX() - this.position.GetX();
+                    this.deplacement.x = c.GetX() - this.position.GetX();
                     // nb de déplacement sur l'axe vertical : négatif si la case sale est au-dessus du robot
-                    this.objectif.y = c.GetY() - this.position.GetY();
+                    this.deplacement.y = c.GetY() - this.position.GetY();
                 }
             });
 
             // Le robot aura-t-il assez de batterie pour aller à l'objectif puis revenir à sa base ?
-            const trajet = Math.abs(this.objectif.x + this.objectif.y);
-            const retour = this.CalculerDistance(this.base.GetX(), this.base.GetY(), this.position.GetX() + this.objectif.x, this.position.GetY() + this.objectif.y);
+            const trajet = Math.abs(this.deplacement.x + this.deplacement.y);
+            const retour = this.CalculerDistance(this.base.GetX(), this.base.GetY(), this.position.GetX() + this.deplacement.x, this.position.GetY() + this.deplacement.y);
             // ajout du point de nettoyage
             const somme = trajet + retour + 1;
 
@@ -103,41 +106,41 @@ class Robot {
                     return;
                 }
 
-                this.objectif.x = this.base.GetX() - this.position.GetX();
-                this.objectif.y = this.base.GetY() - this.position.GetY();
+                this.deplacement.x = this.base.GetX() - this.position.GetX();
+                this.deplacement.y = this.base.GetY() - this.position.GetY();
             }
 
             // Si la case la plus proche est hors de portée d'un aller-retour au point de charge + nettoyage
             // avec le niveau de charge dispensée --> fin de nettoyage impossible
             if ((retour + 1) * 2 >= this.tauxCharge) {
                 console.log("Tâches restantes impossibles à atteindre avec le taux de charge donné.");
-                this.objectif.x = this.base.GetX() - this.position.GetX();
-                this.objectif.y = this.base.GetY() - this.position.GetY();
+                this.deplacement.x = this.base.GetX() - this.position.GetX();
+                this.deplacement.y = this.base.GetY() - this.position.GetY();
                 this.impossible = true;
             }
         }
 
         // On commence par se déplacer sur l'axe X.
         // Une fois ces déplacements épuisés, on se déplace sur l'axe Y.
-        if (this.objectif.x < 0) {
+        if (this.deplacement.x < 0) {
             // déplacement vers la gauche
             this.SetPosition(this.position.GetX() - 1, this.position.GetY());
-            this.objectif.x++;
+            this.deplacement.x++;
         }
-        else if (this.objectif.x > 0) {
+        else if (this.deplacement.x > 0) {
             // déplacement vers la droite
             this.SetPosition(this.position.GetX() + 1, this.position.GetY());
-            this.objectif.x--;
+            this.deplacement.x--;
         }
-        else if (this.objectif.y < 0) {
+        else if (this.deplacement.y < 0) {
             // déplacement vers le haut
             this.SetPosition(this.position.GetX(), this.position.GetY() - 1);
-            this.objectif.y++;
+            this.deplacement.y++;
         }
-        else if (this.objectif.y > 0) {
+        else if (this.deplacement.y > 0) {
             // déplacement vers le bas
             this.SetPosition(this.position.GetX(), this.position.GetY() + 1);
-            this.objectif.y--;
+            this.deplacement.y--;
         }
 
         this.AjouterPositionHistorique();

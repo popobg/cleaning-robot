@@ -43,5 +43,5 @@ const AfficherGrille = require("./utilities/afficherGrille.js");
         if (oGrille.isDirty(pos.GetX(), pos.GetY())) {
             robot.Nettoyer(oGrille);
         }
-    }, 2000);
+    }, 3000);
 })();
